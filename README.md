@@ -1,17 +1,42 @@
-# React + Vite
+# Inbound SPX Panel
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Real-time monitoring panel for ES2 inbound operations — vehicle queue, dock occupancy, unloading and status, synced with Supabase.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Vehicle queue with status (Queued, Assigned, Docked, Finished)
+- Real-time occupancy of internal and external docks
+- Filters by status and by modality (FM / LH)
+- Search by queue number, plate, driver or LT
+- Inbound Summary modal with shift metrics (queue time, unloading time and dwell time per modality) and an option to generate a summary image
+- Light/dark theme
+- Automatic refresh (polling + Supabase realtime)
 
-## React Compiler
+## What changed in this version
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Reorganized the code: it used to be a single large file, now it's split by responsibility (data hooks, screen components and utility functions), much easier to touch without breaking something
+- The main panel now automatically falls back to the most recent operational day with data when there's nothing for today yet, showing a banner on screen with the date being displayed
+- Supabase credentials removed from the source code and moved to environment variables
+- Removed an unnecessary automatic write to the database (dwell time calculation is now in-memory only, for display)
 
-## Expanding the Oxlint configuration
+## Running locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```
+npm install
+npm run dev
+```
 
+Create a `.env.local` file at the root with the variables (see `.env.example`):
+
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_KEY=
+```
+
+## Production build
+
+```
+npm run build
+```
+
+Outputs static files to `dist/`.
